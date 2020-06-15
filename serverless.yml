@@ -1,0 +1,60 @@
+service: passport-lens
+frameworkVersion: ">=1.0.0 < 2.0.0"
+
+custom:
+  STAGE: ${self:provider.stage} # 현재 스테이지 별로 정보를 달리하기 위함
+  CONFIG: ${file(./common/environments.js):CONFIG} # environments.js 에서 가져올 데이터 베이스 접속정보
+
+provider:
+  name: aws
+  runtime: nodejs12.x
+  stage: ${opt:stage, 'dev'} # -s 옵션을 받으면 사용하고, 그렇지 않으면 기본 dev 스테이지 사용
+  region: ap-northeast-2
+  environment:
+    STAGE: ${self:provider.stage}
+    # custom 항목 중 DB_CONFIG를 읽어서 스테이지 별로 해당하는 값을 불러옴
+    DB_HOST: ${self:custom.CONFIG.${self:custom.STAGE}.DB_HOST}
+    DB_USER: ${self:custom.CONFIG.${self:custom.STAGE}.DB_USER}
+    DB_PASSWORD: ${self:custom.CONFIG.${self:custom.STAGE}.DB_PASSWORD}
+    DB_DATABASE: ${self:custom.CONFIG.${self:custom.STAGE}.DB_DATABASE}
+    SECRET_KEY: ${self:custom.CONFIG.${self:custom.STAGE}.SECRET_KEY}
+    ACCESS_TOKEN_SECRET: ${self:custom.CONFIG.${self:custom.STAGE}.ACCESS_TOKEN_SECRET}
+    REFRESH_TOKEN_SECRET: ${self:custom.CONFIG.${self:custom.STAGE}.REFRESH_TOKEN_SECRET}
+    SERVICE_KEY: ${self:custom.CONFIG.${self:custom.STAGE}.SERVICE_KEY}
+
+functions:
+  variables:
+    handler: src/env.variables
+    events:
+      - http:
+          path: v1/env
+          method: get
+          cors: true
+  login:
+    handler: src/auth.login
+    events:
+      - http:
+          path: v1/auth
+          method: post
+          cors: true
+  logout:
+    handler: src/auth.logout
+    events:
+      - http:
+          path: v1/auth
+          method: delete
+          cors: true
+  token:
+    handler: src/auth.token
+    events:
+      - http:
+          path: v1/tokens
+          method: post
+          cors: true
+  decrypt:
+    handler: src/lens.decrypt
+    events:
+      - http:
+          path: v1/lens
+          method: post
+          cors: true
