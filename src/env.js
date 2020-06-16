@@ -1,19 +1,11 @@
+"use strict";
+const httpStatus = require("../common/httpStatus");
 const config = require("../common/config");
+const { createErrorResponse, createResponse } = require("../lib/utils");
 
-const createResponse = (status, body) => ({
-  statusCode: status,
-  body: JSON.stringify(body),
-});
+//AWS api g/w에 의해 호출 됨.
+module.exports.variables = async (event, context) => {
+  //return createErrorResponse(httpStatus.InvalidParameterId);
 
-exports.variables = (event, ctx, cb) => {
-  // const {
-  //   DB_HOST,
-  //   DB_USER,
-  //   DB_PASSWORD,
-  //   SECRET_KEY,
-  //   ACCESS_TOKEN_SECRET,
-  //   REFRESH_TOKEN_SECRET,
-  //   SERVICE_KEY,
-  // } = process.env;
-  cb(null, createResponse(200, config));
+  return createResponse(httpStatus.OK, event);
 };

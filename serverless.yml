@@ -31,21 +31,21 @@ functions:
           method: get
           cors: true
   login:
-    handler: src/auth.login
+    handler: src/login.login
     events:
       - http:
           path: v1/auth
           method: post
           cors: true
   logout:
-    handler: src/auth.logout
+    handler: src/logout.logout
     events:
       - http:
           path: v1/auth
           method: delete
           cors: true
   token:
-    handler: src/auth.token
+    handler: src/token.token
     events:
       - http:
           path: v1/tokens
