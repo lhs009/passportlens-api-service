@@ -13,7 +13,6 @@ const environments = {
         option: {
           issuer: "dev.makingrabbit.com",
           expiresIn: 24 * 60 * 60, // 24시간
-          //expiresIn: 60, // 24시간
         },
       },
       refreshToken: {
@@ -21,7 +20,6 @@ const environments = {
         option: {
           issuer: "dev.makingrabbit.com",
           // expiresIn: 24 * 60 * 60, // 24시간
-          expiresIn: 60,
         },
       },
     },
@@ -70,7 +68,7 @@ const environments = {
         secret: process.env.ACCESS_TOKEN_SECRET,
         option: {
           issuer: "prod.makingrabbit.com",
-          expiresIn: 24 * 60 * 60, // 24시간
+          expiresIn: 60 * 60, // 1 시간
         },
       },
       refreshToken: {

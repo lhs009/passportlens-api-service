@@ -22,10 +22,21 @@ const getResponse = (data) => {
         country: passportInfo.substring(0, 3),
         passportNo: passportInfo.substring(3, 10),
       });
-
+    //P:CAN:ZE000509:CAN:230114::850101:female:SARAH:MARTIN
     case "A": // QRcode
+      const fields = passportInfo.split(":");
+
       return createResponse(httpStatus.OK, {
-        passportInfo,
+        documentCode: fields[0] ? fields[0] : "",
+        issuingCountry: fields[1] ? fields[1] : "",
+        documentNumber: fields[2] ? fields[2] : "",
+        nationality: fields[3] ? fields[3] : "",
+        dateOfExpiry: fields[4] ? fields[4] : "",
+        personalNumber: fields[5] ? fields[5] : "",
+        dateOfBirth: fields[6] ? fields[6] : "",
+        gender: fields[7] ? fields[7] : "",
+        givenName: fields[8] ? fields[8] : "",
+        surName: fields[9] ? fields[9] : "",
       });
 
     default:
@@ -43,3 +54,18 @@ module.exports.decrypt = async (event, context, callback) => {
 
   return response;
 };
+
+//`${documentCode}:${issuingState}:${documentNumber}:${nationality}:${expirationDate}:${personalNumber}:${birthDate}:${sex}:${firstName}:${lastName}`
+
+/* 
+  <li>도큐먼트코드: ${passportInfo[0]}</li>
+  <li>이슈잉 상태: ${passportInfo[1]}</li>
+  <li>여권번호: ${passportInfo[2]}</li>
+  <li>국가코드: ${passportInfo[3]}</li>
+  <li>만기일: ${passportInfo[4]}</li>
+  <li>개인번호: ${passportInfo[5]}</li>
+  <li>생일: ${passportInfo[6]}</li>
+  <li>성별: ${passportInfo[7]}</li>
+  <li>성: ${passportInfo[8]}</li>
+  <li>이름: ${passportInfo[9]}</li> 
+*/
