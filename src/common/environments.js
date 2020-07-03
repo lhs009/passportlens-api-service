@@ -1,35 +1,40 @@
+"use strict";
+
+/*
+  ACCESS_TOKEN_SECRET: JWT access token 용 시크릿
+  REFRESH_TOKEN_SECRET: JWT refresh token 용 시크릿 
+  SERVICE_KEY: passport 복호화 대칭키
+*/
+
 module.exports.CONFIG = (serverless) => ({
   dev: {
-    DB_HOST:
-      "data-engineering-practice.cyjgnimip8wj.ap-northeast-2.rds.amazonaws.com",
-    DB_USER: "admin",
-    DB_PASSWORD: "sion130826!",
-    DB_DATABASE: "passportLens",
-    SECRET_KEY: "MySecretKey1$1$234",
+    LOG_LEVEL: "DEBUG",
     ACCESS_TOKEN_SECRET: "MAKINGRABBIT_JSON_WEB_TOKEN_KEY_!@#$",
     REFRESH_TOKEN_SECRET: "MAKINGRABBIT_JSON_WEB_TOKEN_KEY_!@#^^",
     SERVICE_KEY: "jmlim12345bbbbbaaaaa123456789061",
+    DYNAMO_TABLES: {
+      CUSTOMERS: "passport-lens-customers-dev",
+      APPS: "passport-lens-apps-dev",
+    },
   },
   stage: {
-    DB_HOST:
-      "stage-data-engineering-practice.cyjgnimip8wj.ap-northeast-2.rds.amazonaws.com",
-    DB_USER: "stageadmin",
-    DB_PASSWORD: "sgateadmin1234!",
-    DB_DATABASE: "passportLens",
-    SECRET_KEY: "stageMySecretKey1$1$234",
+    LOG_LEVEL: "ERROR",
     ACCESS_TOKEN_SECRET: "stageMAKINGRABBIT_JSON_WEB_TOKEN_KEY_!@#$",
     REFRESH_TOKEN_SECRET: "stageMAKINGRABBIT_JSON_WEB_TOKEN_KEY_!@#^^",
     SERVICE_KEY: "stage12345bbbbbaaaaa123456789061",
+    DYNAMO_TABLES: {
+      CUSTOMERS: "passport-lens-customers-stage",
+      APPS: "passport-lens-apps-stage",
+    },
   },
   prod: {
-    DB_HOST:
-      "prod-data-engineering-practice.cyjgnimip8wj.ap-northeast-2.rds.amazonaws.com",
-    DB_USER: "^^prod-admin",
-    DB_PASSWORD: "prod-admin1234!",
-    DB_DATABASE: "passportLens",
-    SECRET_KEY: "prod-MySecretKey1$1$234",
+    LOG_LEVEL: "ERROR",
     ACCESS_TOKEN_SECRET: "PROD_MAKINGRABBIT_JSON_WEB_TOKEN_KEY_!@#$",
     REFRESH_TOKEN_SECRET: "PRODMAKINGRABBIT_JSON_WEB_TOKEN_KEY_!@#^^",
     SERVICE_KEY: "prodm12345bbbbbaaaaa123456789061",
+    DYNAMO_TABLES: {
+      CUSTOMERS: "passport-lens-customers-prod",
+      APPS: "passport-lens-apps-prod",
+    },
   },
 });

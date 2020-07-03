@@ -1,4 +1,13 @@
+/*
+  function: decryptPassport
+  description: 암호화된 passport 정보를 복호화 처리 하는 API
+  writer: Lee Hwansoo
+  createdAt: 2020/06/30
+  updatedAt: 2020/06/30
+*/
 "use strict";
+
+const crypto = require("crypto");
 const httpStatus = require("../common/httpStatus");
 const { createErrorResponse, createResponse } = require("../lib/utils");
 const cipherUtil = require("../lib/cipherUtil");
@@ -45,10 +54,50 @@ const getResponse = (data) => {
   }
 };
 
-module.exports.decrypt = async (event, context, callback) => {
-  const { payload } = JSON.parse(event.body);
-  console.log(payload);
+/*
+  1. api key 확인
+  2. signature 확인
+  3. signature 검증 BASE64(HAMC256(apiKey + timestamp, (clientId:payload:timestamp))
+*/
+module.exports.decryptPassport = async (event, context) => {
+  // apiKey from http header X-api-key
+  const apiKey = event.headers["x-api-key"];
+  const clientId = event.headers["x-client-id"];
+  const signature = event.headers["x-signature"];
+  const timestamp = event.headers["x-timestamp"];
 
+  // 인증 파라미터 확인
+  if (!apiKey || !clientId || !signature || !timestamp) {
+    console.log(
+      `Invalid header values: ${apiKey}:${clientId}:${signature}:${timestamp}`
+    );
+    return createErrorResponse(httpStatus.InvalidHeaderValues);
+  }
+  // payload validation
+  const { payload } = JSON.parse(event.body);
+  console.log("req data: " + payload);
+  if (!payload) {
+    return createErrorResponse(httpStatus.InvalidRequestData);
+  }
+  // timestamp 시간 검증 추가 (10분 내외)
+  if (!timestamp) {
+    return createErrorResponse(httpStatus.InvalidParameters);
+  }
+  // signature hash 값 생성
+  const message = `${clientId}:${payload}:${timestamp}`;
+  const key = `${apiKey}${timestamp}`;
+  const comparedSignature = crypto
+    .createHmac("sha256", key)
+    .update(message)
+    .digest("base64");
+
+  // signature 값 비교
+  console.log(`${signature}:${comparedSignature}`);
+  if (signature !== comparedSignature) {
+    return createErrorResponse(httpStatus.InvalidParameters);
+  }
+
+  // payload decryption
   const data = cipherUtil.decrypt(payload);
   const response = getResponse(data);
 
@@ -69,3 +118,9 @@ module.exports.decrypt = async (event, context, callback) => {
   <li>성: ${passportInfo[8]}</li>
   <li>이름: ${passportInfo[9]}</li> 
 */
+
+// x-api-key: xxxxxxxxx
+// x-signature: BASE64(HAMC(secret, (message:timestamp))
+// x-timestamp: timestamp
+// Server, Embed device
+// 해쉬 알고리즘: HMAC (SHA256)

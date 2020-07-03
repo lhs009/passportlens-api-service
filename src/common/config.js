@@ -1,25 +1,20 @@
 const environments = {
   dev: {
-    dbConfig: {
-      username: process.env.DB_USER,
-      password: process.env.DB_PASSWORD,
-      database: process.env.DB_DATABASE,
-      host: process.env.DB_HOST,
-      dialect: "mysql",
-    },
     tokenConfig: {
       accessToken: {
         secret: process.env.ACCESS_TOKEN_SECRET,
         option: {
           issuer: "dev.makingrabbit.com",
-          expiresIn: 24 * 60 * 60, // 24시간
+          //expiresIn: 24 * 60 * 60, // 24시간
+          expiresIn: 60 * 10, // 10분
         },
       },
       refreshToken: {
         secret: process.env.REFRESH_TOKEN_SECRET,
         option: {
           issuer: "dev.makingrabbit.com",
-          // expiresIn: 24 * 60 * 60, // 24시간
+          //expiresIn: 30 * 24 * 60 * 60, // 30일
+          expiresIn: 60 * 60, // 60분
         },
       },
     },
@@ -28,13 +23,6 @@ const environments = {
     },
   },
   stage: {
-    dbConfig: {
-      username: process.env.DB_USER,
-      password: process.env.DB_PASSWORD,
-      database: process.env.DB_DATABASE,
-      host: process.env.DB_HOST,
-      dialect: "mysql",
-    },
     tokenConfig: {
       accessToken: {
         secret: process.env.ACCESS_TOKEN_SECRET,
@@ -47,7 +35,7 @@ const environments = {
         secret: process.env.REFRESH_TOKEN_SECRET,
         option: {
           issuer: "stage.makingrabbit.com",
-          // expiresIn: 24 * 60 * 60, // 24시간
+          expiresIn: 30 * 24 * 60 * 60, // 30일
         },
       },
     },
@@ -56,26 +44,19 @@ const environments = {
     },
   },
   prod: {
-    dbConfig: {
-      username: process.env.DB_USER,
-      password: process.env.DB_PASSWORD,
-      database: process.env.DB_DATABASE,
-      host: process.env.DB_HOST,
-      dialect: "mysql",
-    },
     tokenConfig: {
       accessToken: {
         secret: process.env.ACCESS_TOKEN_SECRET,
         option: {
           issuer: "prod.makingrabbit.com",
-          expiresIn: 60 * 60, // 1 시간
+          expiresIn: 24 * 60 * 60, // 24 시간
         },
       },
       refreshToken: {
         secret: process.env.REFRESH_TOKEN_SECRET,
         option: {
           issuer: "prod.makingrabbit.com",
-          // expiresIn: 24 * 60 * 60, // 24시간
+          expiresIn: 30 * 24 * 60 * 60, // 30일
         },
       },
     },
